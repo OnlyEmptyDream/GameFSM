@@ -1,6 +1,6 @@
 package com.kong.fsm.monster.ai;
 
-import com.kong.fsm.monster.MonsterActor;
+import com.kong.common.obj.MonsterActor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

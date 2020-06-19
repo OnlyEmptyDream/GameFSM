@@ -1,6 +1,6 @@
 package com.kong.aoi;
 
-import com.kong.aoi.obj.IMapObject;
+import com.kong.common.obj.MapObject;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ public interface AOIEventListener {
      * @param obj
      * @param watchers
      */
-    void onAdd(IMapObject obj, Map<Long, IMapObject> watchers);
+    void onAdd(MapObject obj, Map<Long, MapObject> watchers);
 
     /**
      * 被观察者移动之后，通知观察者 该被观察者的位置变更
@@ -22,7 +22,7 @@ public interface AOIEventListener {
      * @param oldWatchers
      * @param newWachers
      */
-    void onUpdate(IMapObject obj, Map<Long, IMapObject> oldWatchers, Map<Long, IMapObject> newWachers);
+    void onUpdate(MapObject obj, Map<Long, MapObject> oldWatchers, Map<Long, MapObject> newWachers);
 
     /**
      * 观察者自己移动之后，视野更新事件
@@ -30,7 +30,7 @@ public interface AOIEventListener {
      * @param addObjectList
      * @param removeObjectList
      */
-    void onUpdateWatcher(IMapObject obj, List<IMapObject> addObjectList, List<IMapObject> removeObjectList);
+    void onUpdateWatcher(MapObject obj, List<MapObject> addObjectList, List<MapObject> removeObjectList);
 
 
     /**
@@ -39,5 +39,5 @@ public interface AOIEventListener {
      * @param obj
      * @param watchers
      */
-    void remove(IMapObject obj, Map<Long, IMapObject> watchers);
+    void remove(MapObject obj, Map<Long, MapObject> watchers);
 }

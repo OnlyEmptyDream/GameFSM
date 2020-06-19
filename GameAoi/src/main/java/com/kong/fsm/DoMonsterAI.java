@@ -1,5 +1,6 @@
 package com.kong.fsm;
 
+import com.kong.common.obj.MonsterActor;
 import com.kong.fsm.heart.ExecutorUtil;
 import com.kong.fsm.heart.MonsterHeart;
 import com.kong.fsm.monster.*;
@@ -17,7 +18,7 @@ public class DoMonsterAI {
         states.add(new MonsterActiveState(FSMState.Active, monster));
         states.add(new MonsterDieState(FSMState.Die, monster));
         states.add(new MonsterFightState(FSMState.Fight, monster));
-        monster.setMachine(new FSMMachine<>(states, new MonsterSleepState(FSMState.Sleep, monster)));
+        monster.setMachine(new FSMMachine<>(states, states.get(0)));
         ExecutorUtil.scheduleAtFixedRate(new MonsterHeart(monster), -1, 2000);
 
         Scanner input = new Scanner(System.in);

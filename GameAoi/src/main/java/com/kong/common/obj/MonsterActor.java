@@ -1,8 +1,6 @@
-package com.kong.fsm.monster;
+package com.kong.common.obj;
 
-import com.kong.fsm.AIData;
 import com.kong.fsm.FSMMachine;
-import com.kong.fsm.Performer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,4 +17,6 @@ public class MonsterActor extends Performer {
     public boolean isDead(){
         return isDead;
     }
+
+    private int type = 2;
 }

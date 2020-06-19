@@ -1,6 +1,6 @@
 package com.kong.fsm.heart;
 
-import com.kong.fsm.monster.MonsterActor;
+import com.kong.common.obj.MonsterActor;
 import lombok.Getter;
 import lombok.Setter;
 

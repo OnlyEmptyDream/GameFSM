@@ -1,6 +1,6 @@
 package com.kong.aoi;
 
-import com.kong.aoi.obj.IMapObject;
+import com.kong.common.obj.MapObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,11 +12,11 @@ import java.util.Map;
 public class Tower {
     private static final Logger LOGGER = LoggerFactory.getLogger(Tower.class);
 
-    private final Map<Long, IMapObject> objectMap = new HashMap<>();
+    private final Map<Long, MapObject> objectMap = new HashMap<>();
 
-    private final Map<Long, IMapObject> watchers = new HashMap<>();
+    private final Map<Long, MapObject> watchers = new HashMap<>();
 //    type 为MapObjectType里面的枚举类型
-    private final Map<Integer, Map<Long, IMapObject>> typeOfObjectMap = new HashMap<>();
+    private final Map<Integer, Map<Long, MapObject>> typeOfObjectMap = new HashMap<>();
 
     /**
      * 灯塔中游戏对象的数量
@@ -27,12 +27,12 @@ public class Tower {
 
     private int y = 0;
 
-    public boolean addObject(IMapObject obj) {
+    public boolean addObject(MapObject obj) {
         if (obj == null) {
             return false;
         }
         objectMap.put(obj.getId(), obj);
-        Map<Long, IMapObject> map = this.typeOfObjectMap.get(obj.getType());
+        Map<Long, MapObject> map = this.typeOfObjectMap.get(obj.getType());
         if (map == null) {
             map = new HashMap<>();
             this.typeOfObjectMap.put(obj.getType(), map);
@@ -55,7 +55,7 @@ public class Tower {
      *
      * @param obj
      */
-    public void addWatcher(IMapObject obj) {
+    public void addWatcher(MapObject obj) {
         if (obj == null) {
             return;
         }
@@ -67,9 +67,9 @@ public class Tower {
      *
      * @param obj
      */
-    public void removeWatcher(IMapObject obj) {
+    public void removeWatcher(MapObject obj) {
         if (obj != null) {
-            IMapObject ret = this.watchers.remove(obj.getId());
+            MapObject ret = this.watchers.remove(obj.getId());
             if (ret == null) {
                 LOGGER.debug("移除观察者失败：" + obj.getName() + "[" + this.x + "," + this.y + "]");
             } else {
@@ -86,7 +86,7 @@ public class Tower {
      *
      * @return
      */
-    public Map<Long, IMapObject> getWatchers() {
+    public Map<Long, MapObject> getWatchers() {
         return this.watchers;
     }
 
@@ -95,7 +95,7 @@ public class Tower {
      *
      * @param obj
      */
-    public void removeObject(IMapObject obj) {
+    public void removeObject(MapObject obj) {
         boolean isPlayer = obj.getType() == MapObjectType.Player;
         obj = objectMap.remove(obj.getId());
         if (obj != null) {
@@ -115,7 +115,7 @@ public class Tower {
      * @param type
      * @return
      */
-    public Map<Long, IMapObject> getObjectByType(int type) {
+    public Map<Long, MapObject> getObjectByType(int type) {
         if (this.typeOfObjectMap.containsKey(type)) {
             return this.typeOfObjectMap.get(type);
         }
@@ -127,7 +127,7 @@ public class Tower {
      *
      * @return
      */
-    public Map<Long, IMapObject> getAllObject() {
+    public Map<Long, MapObject> getAllObject() {
         return objectMap;
     }
 
@@ -161,12 +161,12 @@ public class Tower {
         Iterator<Long> allIt = objectMap.keySet().iterator();
         while (allIt.hasNext()) {
             Long id = allIt.next();
-            IMapObject iMapObject = objectMap.get(id);
-            if (iMapObject == null) {
+            MapObject MapObject = objectMap.get(id);
+            if (MapObject == null) {
                 continue;
             }
-            if (iMapObject.getVector3() == null) {
-                LOGGER.error("地图{}中的对象{}坐标为空，但却依然在AOI.objectMap里,Tower:[{},{}]", mapId, iMapObject.getName(), this.x, this.y);
+            if (MapObject.getVector3() == null) {
+                LOGGER.error("地图{}中的对象{}坐标为空，但却依然在AOI.objectMap里,Tower:[{},{}]", mapId, MapObject.getName(), this.x, this.y);
                 allIt.remove();
             }
         }
@@ -174,26 +174,26 @@ public class Tower {
         Iterator<Long> watcherIt = watchers.keySet().iterator();
         while (watcherIt.hasNext()) {
             Long id = watcherIt.next();
-            IMapObject iMapObject = watchers.get(id);
-            if (iMapObject == null) {
+            MapObject MapObject = watchers.get(id);
+            if (MapObject == null) {
                 continue;
             }
-            if (iMapObject.getVector3() == null) {
-                LOGGER.error("地图{}中的对象{}坐标为空，但却依然在AOI.watchers里,Tower:[{},{}]", mapId, iMapObject.getName(), this.x, this.y);
+            if (MapObject.getVector3() == null) {
+                LOGGER.error("地图{}中的对象{}坐标为空，但却依然在AOI.watchers里,Tower:[{},{}]", mapId, MapObject.getName(), this.x, this.y);
                 watcherIt.remove();
             }
         }
 
-        for (Map<Long, IMapObject> typeMap : typeOfObjectMap.values()) {
+        for (Map<Long, MapObject> typeMap : typeOfObjectMap.values()) {
             Iterator<Long> typeIt = typeMap.keySet().iterator();
             while (typeIt.hasNext()) {
                 Long id = typeIt.next();
-                IMapObject iMapObject = typeMap.get(id);
-                if (iMapObject == null) {
+                MapObject MapObject = typeMap.get(id);
+                if (MapObject == null) {
                     continue;
                 }
-                if (iMapObject.getVector3() == null) {
-                    LOGGER.error("地图{}中的对象{}坐标为空，但却依然在AOI.typeOfObjectMap里,Tower:[{},{}]", mapId, iMapObject.getName(), this.x, this.y);
+                if (MapObject.getVector3() == null) {
+                    LOGGER.error("地图{}中的对象{}坐标为空，但却依然在AOI.typeOfObjectMap里,Tower:[{},{}]", mapId, MapObject.getName(), this.x, this.y);
                     typeIt.remove();
                 }
             }

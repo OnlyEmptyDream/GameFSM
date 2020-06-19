@@ -5,27 +5,26 @@ import lombok.Data;
 import java.util.Objects;
 
 @Data
-public class Vector3f {
+public class Vector2f {
     int x;
     int y;
-    int z;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Vector3f vector3f = (Vector3f) o;
-        return x == vector3f.x &&
-                y == vector3f.y &&
-                z == vector3f.z;
+        Vector2f vector2f = (Vector2f) o;
+        return x == vector2f.x &&
+                y == vector2f.y;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y, z);
+        return Objects.hash(x, y);
     }
 
-    public Vector2f toVector2f(){
-        return new Vector2f(this.getX(), this.getY());
+    public Vector2f(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 }

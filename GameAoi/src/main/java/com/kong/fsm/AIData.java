@@ -1,9 +1,8 @@
 package com.kong.fsm;
 
+import com.kong.common.obj.Performer;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
 @Setter

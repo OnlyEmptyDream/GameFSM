@@ -1,11 +1,12 @@
-package com.kong.fsm;
+package com.kong.common.obj;
 
+import com.kong.common.obj.MapObject;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Performer {
+public class Performer extends MapObject {
 
     /**
      * 攻击我的对象

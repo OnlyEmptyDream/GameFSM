@@ -1,18 +1,22 @@
 package com.kong.aoi;
 
+import com.kong.aoi.obj.Vector2f;
+import com.kong.aoi.obj.Vector3f;
+import com.kong.common.obj.MapObject;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Data
 public class TowerAOI {
     private static final Logger LOGGER = LoggerFactory.getLogger(TowerAOI.class);
 
-    public static final int WIDTH = 5000;
-    public static final int HEIGHT = 2000;
+    public static final int WIDTH = 2;
+    public static final int HEIGHT = 2;
     public static final int RANGE_LIMIT = 5;
 
     public static final int RANGE_DEFAULT = 2;
@@ -131,6 +135,21 @@ public class TowerAOI {
     }
 
     /**
+     * 将地图坐标转换成灯塔坐标
+     *
+     * @param vector2
+     * @return
+     */
+    public PointAoi transPos(Vector2f vector2) {
+        float rx = Math.abs(vector2.getX() - orginX);
+        float ry = Math.abs(vector2.getY() - orginY);
+        int px = (int) (rx / towerWidth);
+        int py = (int) (ry / towerHeight);
+        //转换aoi坐标。数组下标为0开始。所以格子-1
+        return new PointAoi(px, py);
+    }
+
+    /**
      * 获取Pos周围range大小灯塔中所有指定类型的对象ID
      *
      * @param pos
@@ -138,57 +157,185 @@ public class TowerAOI {
      * @param type
      * @return
      */
-//    public List<IMapObject> getObjectListByRangeAndType(Vector2f pos, int range, int type) {
-////        if (range < 0 || range > this.rangeLimit || !checkPos(pos)) {
-////            return Collections.emptyList();
-////        }
-//
-//        List<IMapObject> ret = new ArrayList<>();
-//
-//        PointAoi tp = transPos(pos);
-//        int round = 2 * range + 1;
-//        int num = round * round;
-//        for (int i = 0; i < num; i++) {
-//            int x = tp.getX() + i % round - range;
-//            int y = tp.getY() + i / round - range;
-//            if (x < 0 || y < 0 || x > this.maxX || y > this.maxY) {
-//                continue;
-//            }
-//            Tower tower = towers[x][y];
-//            ret.addAll(tower.getObjectByType(type).values());
-//
-//        }
-//        return ret;
-//    }
-//
-//    public List<IMapObject> getObjectListByRangeAndType(Vector2f pos, int range, List<Integer> types) {
-//        if (range < 0 || range > this.rangeLimit || !checkPos(pos)) {
-//            return Collections.emptyList();
-//        }
-//
-//        List<IMapObject> ret = new ArrayList<>();
-//
-//        PointAoi tp = transPos(pos);
-//        int round = 2 * range + 1;
-//        int num = round * round;
-//        for (int i = 0; i < num; i++) {
-//            int x = tp.getX() + i % round - range;
-//            int y = tp.getY() + i / round - range;
-//            if (x < 0 || y < 0 || x > this.maxX || y > this.maxY) {
-//                continue;
-//            }
-//            Tower tower = null;
-//            try {
-//                tower = towers[x][y];
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            for (int type : types) {
-//                ret.addAll(tower.getObjectByType(type).values());
-//            }
-//        }
-//        return ret;
-//    }
+    public List<MapObject> getObjectListByRangeAndType(Vector2f pos, int range, int type) {
 
+        List<MapObject> ret = new ArrayList<>();
+
+        PointAoi tp = transPos(pos);
+        int round = 2 * range + 1;
+        int num = round * round;
+        for (int i = 0; i < num; i++) {
+            int x = tp.getX() + i % round - range;
+            int y = tp.getY() + i / round - range;
+            if (x < 0 || y < 0 || x > this.maxX || y > this.maxY) {
+                continue;
+            }
+            Tower tower = towers[x][y];
+            ret.addAll(tower.getObjectByType(type).values());
+
+        }
+        return ret;
+    }
+
+    public List<MapObject> getObjectListByRangeAndType(Vector2f pos, int range, List<Integer> types) {
+        List<MapObject> ret = new ArrayList<>();
+
+        PointAoi tp = transPos(pos);
+        int round = 2 * range + 1;
+        int num = round * round;
+        for (int i = 0; i < num; i++) {
+            int x = tp.getX() + i % round - range;
+            int y = tp.getY() + i / round - range;
+            if (x < 0 || y < 0 || x > this.maxX || y > this.maxY) {
+                continue;
+            }
+            Tower tower = null;
+            try {
+                tower = towers[x][y];
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            for (int type : types) {
+                ret.addAll(tower.getObjectByType(type).values());
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * 添加一个对象，将对象放入坐标对应的灯塔里面，向灯塔中的观察者触发一个 新对象添加事件
+     *
+     * @param obj
+     * @param v2
+     * @return
+     */
+    public boolean addObject(MapObject obj, Vector2f v2) {
+        PointAoi tp = this.transPos(v2);
+        this.towers[tp.getX()][tp.getY()].addObject(obj);
+        return true;
+
+    }
+
+    /**
+     * 添加事件观察者
+     */
+    public boolean addWatcher(MapObject obj, Vector2f v2) {
+        int range = RANGE_LIMIT;
+        PointAoi tp = this.transPos(v2);
+        PosLimit limit = getPosLimit(tp, range);
+        for (int i = limit.getStartX(); i <= limit.getEndX(); i++) {
+            for (int j = limit.getStartY(); j <= limit.getEndY(); j++) {
+                Tower tower = towers[i][j];
+                tower.addWatcher(obj);
+            }
+        }
+        return true;
+    }
+
+    public boolean updateObject(MapObject obj, Vector2f newV2){
+        Vector2f oldV2 = obj.getVector3().toVector2f();
+        PointAoi oldTp = transPos(oldV2);
+        PointAoi newTp = transPos(newV2);
+        if(oldTp.equals(newTp)){
+            //在同一个灯塔的监视范围下
+            return true;
+        }
+        Tower oldTower = towers[oldTp.getX()][oldTp.getY()];
+        Tower newTower = towers[newTp.getX()][newTp.getY()];
+
+        Map<Long, MapObject> oldWatchers = oldTower.getWatchers();
+        Map<Long, MapObject> newWatchers = oldTower.getWatchers();
+
+        Map<Long, MapObject> updatePosWatchers = new HashMap<>();
+        Map<Long, MapObject> addPosWatchers = new HashMap<>();
+        Map<Long, MapObject> removePosWatchers = new HashMap<>();
+
+        for (Long id: oldWatchers.keySet()) {
+            if (!newWatchers.containsKey(id)) {
+                // 移除视野
+                removePosWatchers.put(id, oldWatchers.get(id));
+            } else {
+                // 更新视野
+                updatePosWatchers.put(id, oldWatchers.get(id));
+
+            }
+        }
+
+        for (Long id : newWatchers.keySet()) {
+            if (!oldWatchers.containsKey(id)) {// 通知加入视野
+                addPosWatchers.put(id, newWatchers.get(id));
+            }
+        }
+
+        oldTower.removeObject(obj);
+        newTower.addObject(obj);
+
+
+
+        return true;
+    }
+
+    /**
+     * 触发对象更新事件（发给观察者）
+     * @param obj
+     * @param watchers
+     */
+    private void fireAddObjectEvent(MapObject obj, Map<Long, MapObject> watchers){
+        for(AOIEventListener listener : listeners){
+            listener.onAdd(obj, watchers);
+        }
+    }
+
+    /**
+     * 触发对象移除事件（发给观察者）
+     */
+    private void fireUpdateObjectEvent(TowerChange towerChange){
+
+    }
+
+
+    /**
+     * 获取指定范围的格子限制坐标
+     *
+     * @param pos
+     * @param range
+     * @return
+     */
+    private PosLimit getPosLimit(PointAoi pos, int range) {
+
+        int startX;
+        int startY;
+
+        int endX;
+        int endY;
+
+        if (pos.getX() - range < 0) {
+            startX = 0;
+            endX = 2 * range - 1;
+        } else if (pos.getX() + range > this.maxX) {
+            endX = this.maxX;
+            startX = this.maxX - 2 * range + 1;
+        } else {
+            startX = pos.getX() - range;
+            endX = pos.getX() + range;
+        }
+
+        if (pos.getY() - range < 0) {
+            startY = 0;
+            endY = range * 2 - 1;
+        } else if (pos.getY() + range > this.maxY) {
+            endY = this.maxY;
+            startY = this.maxY - range * 2 + 1;
+        } else {
+            startY = pos.getY() - range;
+            endY = pos.getY() + range;
+        }
+
+        startX = startX >= 0 ? startX : 0;
+        endX = endX < this.maxX ? endX : this.maxX;
+        startY = startY >= 0 ? startY : 0;
+        endY = endY < this.maxY ? endY : this.maxY;
+        return new PosLimit(startX, endX, startY, endY);
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.kong.fsm.monster;
 
+import com.kong.common.obj.MonsterActor;
 import com.kong.fsm.AIData;
 import com.kong.fsm.FSMState;
 import com.kong.fsm.monster.ai.AIFactory;
