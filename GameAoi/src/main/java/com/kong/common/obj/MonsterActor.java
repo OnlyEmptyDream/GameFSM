@@ -18,5 +18,9 @@ public class MonsterActor extends Performer {
         return isDead;
     }
 
-    private int type = 2;
+    public MonsterActor(long id, String name) {
+        this.id = id;
+        this.name = name;
+        this.type = 2;
+    }
 }

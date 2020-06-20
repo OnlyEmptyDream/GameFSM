@@ -14,5 +14,9 @@ public class PlayerActor extends Performer {
         return isDead;
     }
 
-    private int type = 1;
+    public PlayerActor(long id, String name) {
+        this.id = id;
+        this.name = name;
+        this.type = 1;
+    }
 }

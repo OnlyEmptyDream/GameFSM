@@ -21,15 +21,34 @@ public class AOIEventListenerImpl implements AOIEventListener{
     }
 
     public void onAdd(MapObject obj, Map<Long, MapObject> watchers) {
-
+        for (MapObject watchersObject: watchers.values()) {
+            System.out.println(watchersObject.getName() + "接收到消息：对象" + obj.getName() + "进入地图, 当前坐标" + obj.getVector3());
+        }
+        System.out.println("-------------------------------------------------------");
     }
 
-    public void onUpdate(MapObject obj, Map<Long, MapObject> oldWatchers, Map<Long, MapObject> newWachers) {
-
+    @Override
+    public void onUpdate(MapObject obj, Map<Long, MapObject> removeWatchers, Map<Long, MapObject> updateWatchers, Map<Long, MapObject> addWachers) {
+        for (MapObject watchersObject: removeWatchers.values()) {
+            System.out.println(watchersObject.getName() + "接收到消息：对象" + obj.getName() + "离开视野, 当前坐标" + obj.getVector3());
+        }
+        for (MapObject watchersObject: updateWatchers.values()) {
+            System.out.println(watchersObject.getName() + "接收到消息：对象" + obj.getName() + "更新坐标, 当前坐标" + obj.getVector3());
+        }
+        for (MapObject watchersObject: addWachers.values()) {
+            System.out.println(watchersObject.getName() + "接收到消息：对象" + obj.getName() + "进入视野, 当前坐标" + obj.getVector3());
+        }
+        System.out.println("-------------------------------------------------------");
     }
 
-    public void onUpdateWatcher(MapObject obj, List<MapObject> addObjectList, List<MapObject> removeObjectList) {
-
+    public void onUpdateWatcher(MapObject watcher, List<MapObject> removeObjectList, List<MapObject> addObjectList) {
+        for (MapObject obj : removeObjectList) {
+            System.out.println(watcher.getName() + "更新视野，" + obj.getName() + "离开视野," + watcher.getName() + "当前坐标" + watcher.getVector3());
+        }
+        for (MapObject obj : addObjectList) {
+            System.out.println(watcher.getName() + "更新视野，" + obj.getName() + "进入视野," + watcher.getName() + " 当前坐标" + watcher.getVector3());
+        }
+        System.out.println("-------------------------------------------------------");
     }
 
     public void remove(MapObject obj, Map<Long, MapObject> watchers) {

@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class DoMonsterAI {
     public static void main(String[] args) {
-        MonsterActor monster = new MonsterActor();
+        MonsterActor monster = new MonsterActor(1, "怪物A");
         // 设置状态机
         List<FSMState<MonsterActor>> states = new ArrayList<>();
         states.add(new MonsterSleepState(FSMState.Sleep, monster));

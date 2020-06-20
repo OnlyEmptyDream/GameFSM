@@ -1,5 +1,6 @@
 package com.kong.common.obj;
 
+import com.kong.aoi.AOIEventListenerImpl;
 import com.kong.aoi.MapObjectType;
 import com.kong.aoi.TowerAOI;
 import com.kong.aoi.obj.Vector2f;
@@ -20,7 +21,8 @@ public class MapScene {
     }
 
     public MapScene() {
-        aoi = new TowerAOI(50,50,0,0);
+        aoi = new TowerAOI(100,100,0,0);
+        aoi.addListener(AOIEventListenerImpl.getInstance());
     }
 
     protected TowerAOI aoi;
@@ -44,10 +46,11 @@ public class MapScene {
         aoi.addObject(monster, monster.getVector3().toVector2f());
     }
 
-    public void updateView(MapObject obj, Vector2f v2){
+    public void movePosition(MapObject obj, Vector3f v3){
+        Vector2f v2 = v3.toVector2f();
         aoi.updateObject(obj, v2);
         if(obj.getType() == MapObjectType.Player){
-//            aoi.updateWatcher(obj, v2);
+            aoi.updateWatcher(obj, v2);
         }
     }
 }

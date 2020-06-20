@@ -212,8 +212,8 @@ public class TowerAOI {
     public boolean addObject(MapObject obj, Vector2f v2) {
         PointAoi tp = this.transPos(v2);
         this.towers[tp.getX()][tp.getY()].addObject(obj);
+        fireAddObjectEvent(obj, this.towers[tp.getX()][tp.getY()].getWatchers());
         return true;
-
     }
 
     /**
@@ -244,13 +244,17 @@ public class TowerAOI {
         Tower newTower = towers[newTp.getX()][newTp.getY()];
 
         Map<Long, MapObject> oldWatchers = oldTower.getWatchers();
-        Map<Long, MapObject> newWatchers = oldTower.getWatchers();
+        Map<Long, MapObject> newWatchers = newTower.getWatchers();
 
         Map<Long, MapObject> updatePosWatchers = new HashMap<>();
         Map<Long, MapObject> addPosWatchers = new HashMap<>();
         Map<Long, MapObject> removePosWatchers = new HashMap<>();
 
         for (Long id: oldWatchers.keySet()) {
+            //排除自己
+            if(id == obj.getId()){
+                continue;
+            }
             if (!newWatchers.containsKey(id)) {
                 // 移除视野
                 removePosWatchers.put(id, oldWatchers.get(id));
@@ -270,7 +274,36 @@ public class TowerAOI {
         oldTower.removeObject(obj);
         newTower.addObject(obj);
 
+        fireUpdateObjectEvent(obj, removePosWatchers, updatePosWatchers, addPosWatchers);
 
+        return true;
+    }
+
+    /**
+     * 更新观测者（自己的视野）
+     */
+    public boolean updateWatcher(MapObject object, Vector2f newV2){
+        int newRange = RANGE_DEFAULT;
+        PointAoi oldTp = transPos(object.getVector3().toVector2f());
+        PointAoi newTp = transPos(newV2);
+        if (newTp.getX() == oldTp.getX() && newTp.getY() == oldTp.getY()) {
+            // System.out.println("在同一个灯塔范围内无需更新");
+            return true;
+        }
+        TowerChange tc = getChangeTowers(oldTp, newTp, RANGE_DEFAULT, newRange);
+
+        List<MapObject> addObject = new ArrayList<>();
+        List<MapObject> removeObject = new ArrayList<>();
+        for(Tower tower : tc.getAddTowers()){
+            tower.addWatcher(object);
+            addObject.addAll(tower.getAllObject().values());
+        }
+
+        for(Tower tower : tc.getRemoveTowers()){
+            tower.removeWatcher(object);
+            removeObject.addAll(tower.getAllObject().values());
+        }
+        fireUpdateWatcherEvent(object, removeObject, addObject);
 
         return true;
     }
@@ -281,18 +314,79 @@ public class TowerAOI {
      * @param watchers
      */
     private void fireAddObjectEvent(MapObject obj, Map<Long, MapObject> watchers){
+        if(watchers.size() == 0){
+            return;
+        }
         for(AOIEventListener listener : listeners){
             listener.onAdd(obj, watchers);
         }
     }
 
     /**
-     * 触发对象移除事件（发给观察者）
+     * 触发对象更新事件（发给观察者）
      */
-    private void fireUpdateObjectEvent(TowerChange towerChange){
-
+    private void fireUpdateObjectEvent(MapObject obj, Map<Long, MapObject> removeWatchers, Map<Long, MapObject> updateWatchers,
+                                       Map<Long, MapObject> newWatchers){
+        if(removeWatchers.size() == 0 && updateWatchers.size() == 0 && newWatchers.size() == 0){
+            return;
+        }
+        for(AOIEventListener listener : listeners){
+            listener.onUpdate(obj, removeWatchers, updateWatchers, newWatchers);
+        }
     }
 
+    private void fireUpdateWatcherEvent(MapObject obj, List<MapObject> removeObj, List<MapObject> addObj){
+        if(removeObj.size() == 0 && addObj.size() == 0){
+            return;
+        }
+        for (AOIEventListener listener: listeners) {
+            listener.onUpdateWatcher(obj, removeObj, addObj);
+        }
+    }
+
+
+    public TowerChange getChangeTowers(PointAoi oldTp, PointAoi newTp, int oldRange, int newRange){
+        List<Tower> removeTowers = new ArrayList<>();
+        List<Tower> addTowers =  new ArrayList<>();
+        List<Tower> unChangeTowers = new ArrayList<>();
+
+        PosLimit oldLimit = getPosLimit(oldTp, oldRange);
+        PosLimit newLimit = getPosLimit(newTp, newRange);
+
+        for (int x = oldLimit.getStartX(); x <= oldLimit.getEndX(); x++) {
+            for (int y = oldLimit.getStartY(); y <= oldLimit.getEndY(); y++) {
+                if (isInRect(x, y, newLimit)) {
+                    // 不变的Tower
+                    unChangeTowers.add(towers[x][y]);
+                } else {
+                    // 需要移除的Tower
+                    removeTowers.add(towers[x][y]);
+                }
+            }
+        }
+        // 计算新增的Tower
+        for (int x = newLimit.getStartX(); x <= newLimit.getEndX(); x++) {
+            for (int y = newLimit.getStartY(); y <= newLimit.getEndY(); y++) {
+                if (!isInRect(x, y, oldLimit)) {
+                    addTowers.add(towers[x][y]);
+                }
+            }
+        }
+
+        return new TowerChange(removeTowers, addTowers, unChangeTowers);
+    }
+
+    /**
+     * 是否在矩形之中
+     *
+     * @param x
+     * @param y
+     * @param limit
+     * @return
+     */
+    private boolean isInRect(int x, int y, PosLimit limit) {
+        return x >= limit.getStartX() && x <= limit.getEndX() && y >= limit.getStartY() && y <= limit.getEndY();
+    }
 
     /**
      * 获取指定范围的格子限制坐标
@@ -338,4 +432,7 @@ public class TowerAOI {
         return new PosLimit(startX, endX, startY, endY);
     }
 
+    public void addListener(AOIEventListener listener) {
+        this.listeners.add(listener);
+    }
 }

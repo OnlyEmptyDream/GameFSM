@@ -22,7 +22,7 @@ public interface AOIEventListener {
      * @param oldWatchers
      * @param newWachers
      */
-    void onUpdate(MapObject obj, Map<Long, MapObject> oldWatchers, Map<Long, MapObject> newWachers);
+    void onUpdate(MapObject obj, Map<Long, MapObject> oldWatchers, Map<Long, MapObject> updateWatchers, Map<Long, MapObject> newWachers);
 
     /**
      * 观察者自己移动之后，视野更新事件
@@ -30,7 +30,7 @@ public interface AOIEventListener {
      * @param addObjectList
      * @param removeObjectList
      */
-    void onUpdateWatcher(MapObject obj, List<MapObject> addObjectList, List<MapObject> removeObjectList);
+    void onUpdateWatcher(MapObject obj, List<MapObject> removeObjectList, List<MapObject> addObjectList);
 
 
     /**
