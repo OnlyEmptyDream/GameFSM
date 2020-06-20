@@ -34,15 +34,20 @@ public class MonsterFightState extends FSMState<MonsterActor> {
 
     @Override
     public int checkTransition() {
-        if (performer.isDead()) {
-            return Die;
+        if(performer.getTempChangeStateType() != Fight){
+            System.out.println(performer.getName() + "受到" + performer.getTargetObject().getName() + "的影响，状态发生改变");
+            return performer.getTempChangeStateType();
         }
-
-        if (performer.getWhoAttackMe() != 0 || performer.getWhoMyTarget() != 0) {
-            // 仇恨列表不为空，继续停留在战斗状态下
-            return Fight;
-        }
-        // 否则进入活跃状态
-        return Active;
+        return Fight;
+//        if (performer.isDead()) {
+//            return Die;
+//        }
+//
+//        if (performer.getWhoAttackMe() != 0 || performer.getWhoMyTarget() != 0) {
+//            // 仇恨列表不为空，继续停留在战斗状态下
+//            return Fight;
+//        }
+//        // 否则进入活跃状态
+//        return Active;
     }
 }

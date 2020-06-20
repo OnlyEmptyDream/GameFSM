@@ -5,6 +5,8 @@ import com.kong.fsm.FSMState;
 import com.kong.fsm.monster.ai.AIFactory;
 import com.kong.fsm.monster.ai.ObjectAI;
 
+import java.sql.SQLOutput;
+
 public class MonsterActiveState extends FSMState<MonsterActor> {
     public MonsterActiveState(int type, MonsterActor performer) {
         super(type, performer);
@@ -33,6 +35,11 @@ public class MonsterActiveState extends FSMState<MonsterActor> {
 
     @Override
     public int checkTransition() {
+        if(performer.getTempChangeStateType() != Active){
+            System.out.println(performer.getName() + "受到" + performer.getTargetObject().getName() + "的影响，状态发生改变");
+            return performer.getTempChangeStateType();
+        }
+
         if (performer.isDead()) {// 瞬秒（还没来得及进入战斗状态）
             return Fight;
         }

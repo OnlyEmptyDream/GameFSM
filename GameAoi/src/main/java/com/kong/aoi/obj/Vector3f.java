@@ -26,6 +26,23 @@ public class Vector3f {
                 z == vector3f.z;
     }
 
+    public Vector3f addX(int count){
+        x = x + count < 0 ? x : x + count;
+        return this;
+    }
+
+    public Vector3f addY(int count){
+        y = y + count < 0 ? y : y + count;
+        return this;
+    }
+
+
+    public Vector3f addZ(int count){
+        z = z + count < 0 ? z : z + count;
+        return this;
+    }
+
+
     @Override
     public int hashCode() {
         return Objects.hash(x, y, z);

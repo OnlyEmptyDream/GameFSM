@@ -50,7 +50,7 @@ public class MapScene {
         Vector2f v2 = v3.toVector2f();
         aoi.updateObject(obj, v2);
         if(obj.getType() == MapObjectType.Player){
-            aoi.updateWatcher(obj, v2);
+            aoi.updateWatcher(obj, v3);
         }
     }
 }

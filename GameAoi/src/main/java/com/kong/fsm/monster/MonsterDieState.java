@@ -30,9 +30,14 @@ public class MonsterDieState extends FSMState<MonsterActor> {
 
     @Override
     public int checkTransition() {
-        if (!performer.isDead()) {
-            return Sleep;
+        if(performer.getTempChangeStateType() != Die){
+            System.out.println(performer.getName() + "受到" + performer.getTargetObject().getName() + "的影响，状态发生改变");
+            return performer.getTempChangeStateType();
         }
+
+//        if (!performer.isDead()) {
+//            return Sleep;
+//        }
         return Die;
     }
 }

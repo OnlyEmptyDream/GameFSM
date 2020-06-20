@@ -9,6 +9,7 @@ import com.kong.fsm.monster.ai.ObjectAI;
 public class MonsterSleepState extends FSMState<MonsterActor> {
     public MonsterSleepState(int type, MonsterActor performer) {
         super(type, performer);
+        performer.setTempChangeStateType(type);
     }
 
     @Override
@@ -34,11 +35,15 @@ public class MonsterSleepState extends FSMState<MonsterActor> {
 
     @Override
     public int checkTransition() {
-        //这里根据AIData或者performer的字段及方法 判断应该回溯到哪个状态
-        AIData aiData = performer.getMachine().getAiData();
-        if (aiData.isFindPlayer()) {
-            return Active;
+        if(performer.getTempChangeStateType() != Sleep){
+            System.out.println(performer.getName() + "受到" + performer.getTargetObject().getName() + "的影响，状态发生改变");
+            return performer.getTempChangeStateType();
         }
+//        //这里根据AIData或者performer的字段及方法 判断应该回溯到哪个状态
+//        AIData aiData = performer.getMachine().getAiData();
+//        if (aiData.isFindPlayer()) {
+//            return Active;
+//        }
         return Sleep;
     }
 }

@@ -282,10 +282,13 @@ public class TowerAOI {
     /**
      * 更新观测者（自己的视野）
      */
-    public boolean updateWatcher(MapObject object, Vector2f newV2){
+    public boolean updateWatcher(MapObject object, Vector3f newV3){
         int newRange = RANGE_DEFAULT;
+        Vector2f newV2 = newV3.toVector2f();
         PointAoi oldTp = transPos(object.getVector3().toVector2f());
         PointAoi newTp = transPos(newV2);
+
+        object.setVector3(newV3);
         if (newTp.getX() == oldTp.getX() && newTp.getY() == oldTp.getY()) {
             // System.out.println("在同一个灯塔范围内无需更新");
             return true;
@@ -303,6 +306,7 @@ public class TowerAOI {
             tower.removeWatcher(object);
             removeObject.addAll(tower.getAllObject().values());
         }
+
         fireUpdateWatcherEvent(object, removeObject, addObject);
 
         return true;

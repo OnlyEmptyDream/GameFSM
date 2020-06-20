@@ -1,6 +1,8 @@
 package com.kong.aoi;
 
+import com.kong.aoi.obj.Vector3f;
 import com.kong.common.obj.MapObject;
+import com.kong.fsm.FSMState;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +14,10 @@ public class AOIEventListenerImpl implements AOIEventListener{
 
     private static AOIEventListenerImpl INSTANCE = new AOIEventListenerImpl();
 
+    public int monsterActiveDistance = 72;
+    public int monsterSleepDistance = 200;
+    public int monsterFightDistance = 8;
+
     private AOIEventListenerImpl() {
 
     }
@@ -21,7 +27,43 @@ public class AOIEventListenerImpl implements AOIEventListener{
     }
 
     public void onAdd(MapObject obj, Map<Long, MapObject> watchers) {
+        boolean changeOnce = false;
         for (MapObject watchersObject: watchers.values()) {
+            //实现一下简单的状态机AI
+            if(obj.getType() == MapObjectType.Monster){
+                int distance = getDistance(watchersObject.getVector3(), obj.getVector3());
+                if(distance > 200){
+                    if(obj.getTempChangeStateType() != FSMState.Die){
+                        if(changeOnce && obj.getTempChangeStateType() > FSMState.Sleep){
+                            continue;
+                        }
+                        obj.setTempChangeStateType(FSMState.Sleep);
+                        obj.setTargetObject(watchersObject);
+                        changeOnce = true;
+                    }
+                }else if(distance <= 200 && distance > 72){
+                    if(obj.getTempChangeStateType() != FSMState.Die){
+                        if(changeOnce && obj.getTempChangeStateType() > FSMState.Active){
+                            continue;
+                        }
+                        obj.setTempChangeStateType(FSMState.Active);
+                        obj.setTargetObject(watchersObject);
+                        changeOnce = true;
+                    }
+                }else if(distance <= 72 && distance > 8){
+                    if(obj.getTempChangeStateType() != FSMState.Die){
+                        obj.setTempChangeStateType(FSMState.Fight);
+                        obj.setTargetObject(watchersObject);
+                        changeOnce = true;
+                    }
+                }else if(distance <= 8){
+                    if(obj.getTempChangeStateType() != FSMState.Die){
+                        obj.setTempChangeStateType(FSMState.Die);
+                        obj.setTargetObject(watchersObject);
+                        changeOnce = true;
+                    }
+                }
+            }
             System.out.println(watchersObject.getName() + "接收到消息：对象" + obj.getName() + "进入地图, 当前坐标" + obj.getVector3());
         }
         System.out.println("-------------------------------------------------------");
@@ -53,5 +95,9 @@ public class AOIEventListenerImpl implements AOIEventListener{
 
     public void remove(MapObject obj, Map<Long, MapObject> watchers) {
 
+    }
+
+    public int getDistance(Vector3f startV3, Vector3f endV3){
+        return (int) (Math.pow(startV3.getX() - endV3.getX(), 2) + Math.pow(startV3.getY() - endV3.getY(), 2) + Math.pow(startV3.getZ() - endV3.getZ(), 2));
     }
 }

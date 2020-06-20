@@ -9,4 +9,7 @@ public class MapObject{
     Vector3f vector3;
     String name;
     int type;
+    //临时用来改变怪物状态的字段
+    public int tempChangeStateType;
+    public MapObject targetObject;
 }
