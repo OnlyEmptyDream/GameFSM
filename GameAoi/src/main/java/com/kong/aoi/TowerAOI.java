@@ -17,7 +17,7 @@ public class TowerAOI {
 
     public static final int WIDTH = 2;
     public static final int HEIGHT = 2;
-    public static final int RANGE_LIMIT = 5;
+    public static final int RANGE_LIMIT = 2;
 
     public static final int RANGE_DEFAULT = 2;
 

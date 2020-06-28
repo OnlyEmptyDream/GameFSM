@@ -1,5 +1,9 @@
 package com.kong.fsm;
 
+import com.kong.aoi.MapObjectType;
+import com.kong.aoi.obj.Vector3f;
+import com.kong.common.obj.MapObject;
+import com.kong.common.obj.MapScene;
 import com.kong.common.obj.Performer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +24,13 @@ public class FSMState<T extends Performer> {
     public static final int Die = 4;
 
     public static final int Animate = 5;
+
+
+
+    public static final int SleepDistance = 4;
+    public static final int ActiveDistance = 3;
+    public static final int FightDistance = 2;
+    public static final int DieDistance = 1;
 
     protected int type;
 
@@ -63,8 +74,53 @@ public class FSMState<T extends Performer> {
      * @return
      */
     public int checkTransition() {
+        MapScene mapScene = MapScene.getInstance();
+        int minDistance = Integer.MAX_VALUE;
+        MapObject effectPlayer = null;
+        for(MapObject player : mapScene.getPlayerMap().values()){
+            int distance = getDistance(player.getVector3(), performer.getVector3());
+            if(minDistance > distance){
+                minDistance = distance;
+                effectPlayer = player;
+            }
+        }
+        if(effectPlayer != null){
+            changeStateByDistance(performer, effectPlayer, minDistance, false);
+        }
         return 0;
     }
+
+    private int changeStateByDistance(MapObject obj, MapObject player, int distance, boolean changeOnce) {
+        //实现一下简单的状态机AI
+        int nowState = 0;
+        if(distance >= SleepDistance){
+                if(obj.getTempChangeStateType() != FSMState.Die){
+                    nowState = FSMState.Sleep;
+                    obj.setTempChangeStateType(FSMState.Sleep);
+                    obj.setTargetObject(player);
+                }
+            }else if(distance < SleepDistance && distance >= ActiveDistance){
+                if(obj.getTempChangeStateType() != FSMState.Die){
+                    nowState = FSMState.Active;
+                    obj.setTempChangeStateType(FSMState.Active);
+                    obj.setTargetObject(player);
+                }
+            }else if(distance < ActiveDistance && distance >= FightDistance){
+                if(obj.getTempChangeStateType() != FSMState.Die){
+                    nowState = FSMState.Fight;
+                    obj.setTempChangeStateType(FSMState.Fight);
+                    obj.setTargetObject(player);
+                }
+            }else if(distance < FightDistance){
+                if(obj.getTempChangeStateType() != FSMState.Die){
+                    nowState = FSMState.Die;
+                    obj.setTempChangeStateType(FSMState.Die);
+                    obj.setTargetObject(player);
+                }
+            }
+        return nowState;
+    }
+
 
     /**
      * 拷贝原状态机休眠时间到当前状态机
@@ -82,5 +138,9 @@ public class FSMState<T extends Performer> {
      */
     public int getTime() {
         return 0;
+    }
+
+    public int getDistance(Vector3f startV3, Vector3f endV3){
+        return (int)Math.sqrt (Math.pow(startV3.getX() - endV3.getX(), 2) + Math.pow(startV3.getY() - endV3.getY(), 2) + Math.pow(startV3.getZ() - endV3.getZ(), 2));
     }
 }

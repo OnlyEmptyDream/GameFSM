@@ -34,8 +34,10 @@ public class MonsterFightState extends FSMState<MonsterActor> {
 
     @Override
     public int checkTransition() {
+        super.checkTransition();
         if(performer.getTempChangeStateType() != Fight){
-            System.out.println(performer.getName() + "受到" + performer.getTargetObject().getName() + "的影响，状态发生改变");
+            System.out.println(performer.getName() + "受到" + performer.getTargetObject().getName() + "的影响，状态发生改变\t" + "此时怪物的坐标"
+                    + performer.getVector3() + "\t此时造成影响人物的坐标" + performer.getTargetObject().getVector3());
             return performer.getTempChangeStateType();
         }
         return Fight;

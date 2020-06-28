@@ -35,8 +35,10 @@ public class MonsterSleepState extends FSMState<MonsterActor> {
 
     @Override
     public int checkTransition() {
+        super.checkTransition();
         if(performer.getTempChangeStateType() != Sleep){
-            System.out.println(performer.getName() + "受到" + performer.getTargetObject().getName() + "的影响，状态发生改变");
+            System.out.println(performer.getName() + "受到" + performer.getTargetObject().getName() + "的影响，状态发生改变\t" + "此时怪物的坐标"
+                    + performer.getVector3() + "\t此时造成影响人物的坐标" + performer.getTargetObject().getVector3());
             return performer.getTempChangeStateType();
         }
 //        //这里根据AIData或者performer的字段及方法 判断应该回溯到哪个状态
