@@ -13,7 +13,7 @@ import java.util.Map;
 @Setter
 public class Performer extends MapObject implements CDObject {
 
-    protected Map<Integer, CD> cdMap = new HashMap<>();
+    protected Map<String, CD> cdMap = new HashMap<>();
 
     /**
      * 攻击我的对象

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configs>
+    <configdata>
+        <config class="com.kong.read.config.DropAllBagConfig" file="cfg_dropAllBag" key="id" desc="掉落包">
+        </config>
+    </configdata>
+
+<!--    <configcaches>-->
+<!--        <configcache class="com.kong.read.config.cache.MonsterProduceGroupCache" desc="怪物刷新组"/>-->
+<!--        <configcache class="com.kong.read.config.cache.ChatForbidConfigCache" desc="自动禁言"/>-->
+<!--        <configcache class="com.kong.read.config.cache.SkillClipCache" desc="技能组"/>-->
+<!--        <configcache class="com.kong.read.config.cache.MonsterDropCache" desc="掉落组"/>-->
+<!--    </configcaches>-->
+
+</configs>
