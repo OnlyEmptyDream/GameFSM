@@ -1,12 +1,19 @@
 package com.kong.common.obj;
 
+import com.kong.cd.CD;
+import com.kong.cd.CDObject;
 import com.kong.common.obj.MapObject;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Getter
 @Setter
-public class Performer extends MapObject {
+public class Performer extends MapObject implements CDObject {
+
+    protected Map<Integer, CD> cdMap = new HashMap<>();
 
     /**
      * 攻击我的对象
