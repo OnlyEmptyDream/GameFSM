@@ -18,12 +18,14 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.Executor;
 
 public class TestAoiAndFSM  {
     public static void main(String[] args) {
         MapScene mapScene = MapScene.getInstance();
         //将对象加入地图中
         MonsterActor monsterActor1 = new MonsterActor(1, "Monster1");
+        monsterActor1.setAiType(2);//添加可移动
         // 设置状态机
         List<FSMState<MonsterActor>> states = new ArrayList<>();
         states.add(new MonsterSleepState(FSMState.Sleep, monsterActor1));
@@ -31,13 +33,16 @@ public class TestAoiAndFSM  {
         states.add(new MonsterDieState(FSMState.Die, monsterActor1));
         states.add(new MonsterFightState(FSMState.Fight, monsterActor1));
         monsterActor1.setMachine(new FSMMachine<>(states, states.get(0)));
-        ExecutorUtil.scheduleAtFixedRate(new MonsterHeart(monsterActor1), -1, 2000);
+//        ExecutorUtil.scheduleAtFixedRate(new MonsterHeart(monsterActor1), -1, 2000);
+//        ExecutorUt
+        Thread thread = new Thread(new MonsterHeart(monsterActor1));
+        thread.start();
 
         PlayerActor playerActor1 = new PlayerActor(2, "Player1");
-        PlayerActor playerActor2 = new PlayerActor(3, "Player2");
+//        PlayerActor playerActor2 = new PlayerActor(3, "Player2");
 
-        mapScene.enterPlayer(playerActor1, new Vector3f(53,50,0));
-        mapScene.enterMonter(monsterActor1, new Vector3f(50,50,0));
+        mapScene.enterPlayer(playerActor1, new Vector3f(20,20,0));
+        mapScene.enterMonter(monsterActor1, new Vector3f(0,0,0));
 //        mapScene.enterPlayer(playerActor2, new Vector3f(49,49,0));
 
         Scanner input = new Scanner(System.in);

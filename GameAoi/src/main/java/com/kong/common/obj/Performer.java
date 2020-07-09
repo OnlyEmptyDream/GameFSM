@@ -21,6 +21,7 @@ public class Performer extends MapObject implements CDObject {
     protected long whoAttackMe;
     protected long whoAttackMeTime;
 
+    protected long whoActiveMe;
 
     /**
      * 我的攻击目标

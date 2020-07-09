@@ -27,7 +27,7 @@ public class FSMState<T extends Performer> {
 
 
 
-    public static final int SleepDistance = 4;
+    public static final int SleepDistance = 130;
     public static final int ActiveDistance = 3;
     public static final int FightDistance = 2;
     public static final int DieDistance = 1;
@@ -87,6 +87,7 @@ public class FSMState<T extends Performer> {
         if(effectPlayer != null){
             changeStateByDistance(performer, effectPlayer, minDistance, false);
         }
+        performer.setWhoActiveMe(performer.getTargetObject().getId());
         return 0;
     }
 

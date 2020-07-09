@@ -1,0 +1,66 @@
+package com.kong.path;
+
+import com.kong.common.constant.Dir;
+
+public class GeomUtil {
+    /**
+     * 自己周围八方向的偏移量
+     */
+    public static final int[] EIGHT_DIR_OFFSET = new int[]{-1, -1, 0, -1, 1, -1, 1, 0, 1, 1, 0, 1, -1, 1, -1, 0};
+
+
+    public static Dir getDir(int fx, int fy, int tx, int ty) {
+        int colDiff = tx - fx;
+        int rowDiff = ty - fy;
+        if (colDiff > 0) {
+            if (rowDiff > 0) {
+                if (rowDiff == colDiff) {
+                    return Dir.RIGHT_BOTTOM;
+                } else if (rowDiff > colDiff) {
+                    return Dir.BOTTOM;
+                } else {
+                    return Dir.RIGHT;
+                }
+            } else if (rowDiff < 0) {
+                if (rowDiff + colDiff == 0) {
+                    return Dir.RIGHT_TOP;
+                } else if (rowDiff + colDiff > 0) {
+                    return Dir.RIGHT;
+                } else {
+                    return Dir.TOP;
+                }
+            } else {
+                return Dir.RIGHT;
+            }
+        } else if (colDiff == 0) {
+            if (ty > fy) {
+                return Dir.BOTTOM;
+            } else if (ty == fy) {
+                // 两个点在同一个位置上
+                return Dir.NONE;
+            } else {
+                return Dir.TOP;
+            }
+        } else {
+            if (rowDiff > 0) {
+                if (rowDiff + colDiff == 0) {
+                    return Dir.LEFT_BOTTOM;
+                } else if (rowDiff + colDiff > 0) {
+                    return Dir.BOTTOM;
+                } else {
+                    return Dir.LEFT;
+                }
+            } else if (rowDiff < 0) {
+                if (rowDiff == colDiff) {
+                    return Dir.LEFT_TOP;
+                } else if (rowDiff > colDiff) {
+                    return Dir.LEFT;
+                } else {
+                    return Dir.TOP;
+                }
+            } else {
+                return Dir.LEFT;
+            }
+        }
+    }
+}

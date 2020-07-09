@@ -1,5 +1,6 @@
 package com.kong.aoi.obj;
 
+import com.kong.common.obj.MapScene;
 import lombok.Data;
 
 import java.util.Objects;
@@ -49,6 +50,6 @@ public class Vector3f {
     }
 
     public Vector2f toVector2f(){
-        return new Vector2f(this.getX(), this.getY());
+        return MapScene.getInstance().getPointArray()[x][y];
     }
 }

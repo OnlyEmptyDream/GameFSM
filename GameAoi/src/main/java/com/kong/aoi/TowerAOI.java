@@ -15,8 +15,8 @@ import java.util.*;
 public class TowerAOI {
     private static final Logger LOGGER = LoggerFactory.getLogger(TowerAOI.class);
 
-    public static final int WIDTH = 2;
-    public static final int HEIGHT = 2;
+    public static final int WIDTH = 1;
+    public static final int HEIGHT = 1;
     public static final int RANGE_LIMIT = 2;
 
     public static final int RANGE_DEFAULT = 2;
