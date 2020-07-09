@@ -218,4 +218,19 @@ public enum Dir {
     public void setIndex(int index) {
         this.index = index;
     }
+
+    public String getChineseName(int index){
+        switch (index){
+            case -1: return "同一个点";
+            case 0: return "上";
+            case 1: return "右上";
+            case 2: return "右";
+            case 3: return "右下";
+            case 4: return "下";
+            case 5: return "左下";
+            case 6: return "左";
+            case 7: return "左上";
+        }
+        return "";
+    }
 }

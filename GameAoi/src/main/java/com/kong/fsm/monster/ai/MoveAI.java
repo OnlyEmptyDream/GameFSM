@@ -23,7 +23,7 @@ public class MoveAI extends AbstractAI {
         if(pathList.size() > 0){
             Dir dir = GeomUtil.getDir(monster.getVector3().getX(), monster.getVector3().getY(), pathList.get(0).getX(), pathList.get(0).getY());
             monster.setVector3(pathList.get(0).getX(), pathList.get(0).getY(), monster.getVector3().getZ());
-            System.out.println(monster.getName() + ":向" + dir.name() + "发生移动,当前位置" + monster.getVector3().toVector2f().toString());
+            System.out.println(monster.getName() + ":向" + dir.getChineseName(dir.getIndex()) + "发生移动,当前位置" + monster.getVector3().toVector2f().toString());
         }
         return true;
     }
