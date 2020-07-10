@@ -39,11 +39,11 @@ public class TestAoiAndFSM  {
         thread.start();
 
         PlayerActor playerActor1 = new PlayerActor(2, "Player1");
-//        PlayerActor playerActor2 = new PlayerActor(3, "Player2");
+        PlayerActor playerActor2 = new PlayerActor(3, "Player2");
 
         mapScene.enterPlayer(playerActor1, new Vector3f(20,2,0));
         mapScene.enterMonter(monsterActor1, new Vector3f(0,0,0));
-//        mapScene.enterPlayer(playerActor2, new Vector3f(49,49,0));
+        mapScene.enterPlayer(playerActor2, new Vector3f(14,0,0));
 
         Scanner input = new Scanner(System.in);
         while(input.hasNext()){

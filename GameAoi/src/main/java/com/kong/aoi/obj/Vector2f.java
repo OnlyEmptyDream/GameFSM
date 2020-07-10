@@ -66,7 +66,6 @@ public class Vector2f {
         return "Vector2f{" +
                 "x=" + x +
                 ", y=" + y +
-                ", f=" + f +
                 '}';
     }
 

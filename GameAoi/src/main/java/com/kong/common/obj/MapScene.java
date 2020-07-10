@@ -63,8 +63,8 @@ public class MapScene {
         if(obj.getType() == MapObjectType.Player){
             aoi.updateWatcher(obj, v3);
         }
+        obj.setVector3(v3);
     }
-
 
     //寻路相关
     private Vector2f[][] createEightTree(int width, int height, Vector2f pointArray[][]) {

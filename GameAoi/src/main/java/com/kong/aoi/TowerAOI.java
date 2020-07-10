@@ -17,9 +17,9 @@ public class TowerAOI {
 
     public static final int WIDTH = 1;
     public static final int HEIGHT = 1;
-    public static final int RANGE_LIMIT = 2;
+    public static final int RANGE_LIMIT = 5;
 
-    public static final int RANGE_DEFAULT = 2;
+    public static final int RANGE_DEFAULT = 5;
 
     /**
      * 原点坐标x
@@ -220,7 +220,7 @@ public class TowerAOI {
      * 添加事件观察者
      */
     public boolean addWatcher(MapObject obj, Vector2f v2) {
-        int range = RANGE_LIMIT;
+        int range = RANGE_DEFAULT;
         PointAoi tp = this.transPos(v2);
         PosLimit limit = getPosLimit(tp, range);
         for (int i = limit.getStartX(); i <= limit.getEndX(); i++) {

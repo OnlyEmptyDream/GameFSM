@@ -1,6 +1,7 @@
 package com.kong.fsm.monster.ai;
 
 import com.kong.aoi.obj.Vector2f;
+import com.kong.aoi.obj.Vector3f;
 import com.kong.common.constant.Dir;
 import com.kong.common.obj.MapObject;
 import com.kong.common.obj.MapScene;
@@ -22,8 +23,10 @@ public class MoveAI extends AbstractAI {
         targetPos = target.getVector3().toVector2f();
         if(pathList.size() > 0){
             Dir dir = GeomUtil.getDir(monster.getVector3().getX(), monster.getVector3().getY(), pathList.get(0).getX(), pathList.get(0).getY());
-            monster.setVector3(pathList.get(0).getX(), pathList.get(0).getY(), monster.getVector3().getZ());
-            System.out.println(monster.getName() + ":向" + dir.getChineseName(dir.getIndex()) + "发生移动,当前位置" + monster.getVector3().toVector2f().toString());
+            Vector3f v3 = new Vector3f(pathList.get(0).getX(), pathList.get(0).getY(), monster.getVector3().getZ());
+            MapScene.getInstance().movePosition(monster, v3);
+            System.out.println(monster.getName() + ":向" + dir.getChineseName(dir.getIndex()) + "发生移动,当前位置" + v3.toVector2f().toString());
+            pathList.remove(0);
         }
         return true;
     }
