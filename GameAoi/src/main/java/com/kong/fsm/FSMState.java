@@ -87,7 +87,9 @@ public class FSMState<T extends Performer> {
         if(effectPlayer != null){
             changeStateByDistance(performer, effectPlayer, minDistance, false);
         }
-        performer.setWhoActiveMe(performer.getTargetObject().getId());
+        if(performer.getTargetObject() != null && performer.getTargetObject().getId() != 0){
+            performer.setWhoActiveMe(performer.getTargetObject().getId());
+        }
         return 0;
     }
 

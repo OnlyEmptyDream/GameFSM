@@ -8,9 +8,12 @@ import com.kong.aoi.obj.Vector3f;
 import com.kong.common.constant.Dir;
 import com.kong.path.GeomUtil;
 import com.kong.path.PathFinder;
+import com.sh.commons.util.StringUtil;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -30,6 +33,7 @@ public class MapScene {
         aoi = new TowerAOI(width,height,0,0);
         aoi.addListener(AOIEventListenerImpl.getInstance());
         pathFinder = new PathFinder(width, height);
+//        pointArray = setBlock();
     }
 
     Vector2f pointArray[][];
@@ -94,6 +98,18 @@ public class MapScene {
                 p.setNears(nears);
             }
         }
+        return pointArray;
+    }
+
+    public Vector2f[][] setBlock(){
+        for (Vector2f[] subPoint : pointArray){
+            for(Vector2f point : subPoint) {
+                if(Math.random() > 0.7d){
+                    point.setBlock(true);
+                }
+            }
+        }
+
         return pointArray;
     }
 }
