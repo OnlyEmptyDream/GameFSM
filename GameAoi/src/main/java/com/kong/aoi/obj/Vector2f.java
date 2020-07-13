@@ -30,8 +30,6 @@ public class Vector2f {
     //寻路相关 父节点
     private Vector2f parent;
 
-    //子节点
-    private Vector2f son;
 
     @Override
     public boolean equals(Object o) {
@@ -55,7 +53,6 @@ public class Vector2f {
 
     public void clearRouting(){
         parent = null;
-        son = null;
         g = 0;
         h = 0;
         f = 0;
