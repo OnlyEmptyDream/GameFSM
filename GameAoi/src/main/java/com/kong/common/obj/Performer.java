@@ -29,4 +29,6 @@ public class Performer extends MapObject implements CDObject {
     protected long whoMyTarget;
 
     protected long whoMyTargetTime;
+
+
 }
